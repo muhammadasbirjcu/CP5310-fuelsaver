@@ -4,8 +4,10 @@ import QueryString from 'querystring';
 export default {
 	methods: { 
         requestCarMakes(year){
-
-            let url = 'https://www.fueleconomy.gov/ws/rest/vehicle/menu/make?' + QueryString.stringify({ year: year});
+            const params = new URLSearchParams({
+                year: year
+            });
+            let url = 'https://www.fueleconomy.gov/ws/rest/vehicle/menu/make?' + params.toString();
 
             // check for cached result 
             let cachedData = this.fuelEconomyGetCache(url);
@@ -25,8 +27,11 @@ export default {
             }); 
         },
         requestCarModels(year, make){
-
-            let url = 'https://www.fueleconomy.gov/ws/rest/vehicle/menu/model?' + QueryString.stringify({ year: year, make: make});
+            const params = new URLSearchParams({
+                year: year,
+                make: make
+            });
+            let url = 'https://www.fueleconomy.gov/ws/rest/vehicle/menu/model?' + params.toString();
 
             // check for cached result 
             let cachedData = this.fuelEconomyGetCache(url);
@@ -46,8 +51,12 @@ export default {
             });
         },
         requestCarTrims(year, make, model){
-
-            let url = 'https://www.fueleconomy.gov/ws/rest/vehicle/menu/options?' + QueryString.stringify({ year: year, make: make, model: model});
+            const params = new URLSearchParams({
+                year: year,
+                make: make,
+                model: model
+            });
+            let url = 'https://www.fueleconomy.gov/ws/rest/vehicle/menu/options?' + params.toString();
 
             // check for cached result 
             let cachedData = this.fuelEconomyGetCache(url);
