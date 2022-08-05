@@ -230,7 +230,7 @@
         computed: {
             carCarouselStyle(){
                 return {
-                    'width': ((310 * (this.cars.length + 1)) + "px")
+                    'width': ( ((260 + 25) * (this.cars.length + 1) ) + 25 + "px")
                 }
             },
             formattedDistance(){
@@ -309,6 +309,8 @@ html,body{
 }
 .car-list-flex{
     display: flex;
+    justify-content: center;
+    margin: 0 auto;
 }
 .car-card:first-child{
     margin-left:25px;
@@ -364,15 +366,22 @@ html,body{
     font-size: 20px;
     font-weight: bold;
     padding: 0 5px;
-    margin: 20px auto;
+    margin: 20px 25px;
     background: rgb(148,71,251);
     background: linear-gradient(360deg, #708bfc 0%, rgba(48,196,252,1) 100%);
     color: #091842;
     border-radius: 120px;
     display: flex;
-    width:300px;
+
     align-items: center;
     text-align: center;
+}
+@media only screen and (min-width: 450px) {
+    .factors-info{
+        width:400px;
+        margin-left:auto;
+        margin-right:auto;
+    }
 }
     .factors-info>div{
         padding: 10px 0;

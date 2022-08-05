@@ -2,10 +2,14 @@
 
     <div v-if="car" class="car-card-inner">
         <div v-if="car.id">
-            <div class="car-image"><img src="/veiled-car-2.png" /></div>
+            <div class="car-image">
+                <div class="car-logo"><img :src="logoSource(car.make)" /></div>
+                <img src="/veiled-car-2.png" />
+            </div>
             <div class="car-info">
                 <div class="car-make">
-                    {{ car.make }} &nbsp; 
+                    <!-- <div class="car-logo"><img :src="logoSource(car.make)" /></div> -->
+                    {{ car.make }}
                 </div>
                 <div class="car-model">
                     {{ car.model }}
@@ -39,6 +43,7 @@
 <script>
     import fuelEconomyApi from '../mixins/FuelEconomyApi.js';
     import unitConverter from '../mixins/UnitConverter.js';
+    import carLogo from '../mixins/CarLogo.js';
     export default {
         props: {
             car: null,
@@ -48,7 +53,8 @@
         },
         mixins: [
             fuelEconomyApi,
-            unitConverter
+            unitConverter,
+            carLogo
         ],
         data(){
             return {
@@ -99,9 +105,23 @@
         margin:0 15px 0 15px;
         width: calc(100%-30px);
     }
-    .car-image img{
+    .car-image>img{
         display: block;
         width: 100%;
+    }
+    .car-image .car-logo{
+        height:30px;
+        width:30px;
+        position: absolute;
+        left:50%;
+        margin-left:-15px;
+        top:50%;
+        margin-top:-15px;
+    }
+    .car-image .car-logo img{
+        max-height: 100%;
+        max-width: 100%;
+        display: block;
     }
     .car-info{
         margin-top:-30px;
@@ -116,6 +136,16 @@
     }
     .car-make{
         font-size:18px;
+    }
+    .car-make .car-logo{
+        height: 18px;
+        display: inline-block;
+        margin-right:5px;
+    }
+    .car-make .car-logo img{
+        max-height: 100%;
+        max-width: 100%;
+        display: block;
     }
     .car-year{
         font-size:14px;
