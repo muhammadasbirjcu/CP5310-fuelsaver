@@ -46,10 +46,11 @@
                 distance: null,
                 busy: false,
                 map: null,
-                mapId: '4d6e0bbce5ea5a83'
+                mapId: null
             }
         },
         mounted(){
+            this.mapId = window.mapId;
             this.onMapsLoaded = () => { 
                 this.map = new google.maps.Map(document.getElementById('map'), {
                     center: {

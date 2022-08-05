@@ -7,10 +7,11 @@ export default {
             placeService: null,
             loaded: false,
             onMapsLoaded: null,
-            mapsApiKey: 'AIzaSyDYJT7RaFJiVdoeT7UAF8e3DQY9flnmWLM'
+            mapsApiKey: null
         }
     },
     mounted() {
+        this.mapsApiKey = window.mapsApiKey;
     },
     methods: {
         loadMapScript(){
