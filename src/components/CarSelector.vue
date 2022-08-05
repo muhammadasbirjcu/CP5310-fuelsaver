@@ -1,13 +1,13 @@
 <template>
-    <div class="card text-start">
-        <div class="px-3 py-2 border-bottom">
+    <div >
+        <div class="mb-3">
             <label for="drilldown-year" class="form-label">Year</label>
             <select id="drilldown-year" v-model="drilldown.year" class="form-control">
                 <option v-for="yearItem in years" :key="yearItem" :value="yearItem">{{ yearItem }}</option>
             </select>
         </div>
 
-        <div v-if="drilldown.year" class="px-3 py-2 border-bottom">
+        <div v-if="drilldown.year" class="mb-3">
             <div v-if="makesLoading" class="loading-section">
                 <font-awesome-icon icon="fa-solid fa-spinner" spin />
                 Loading car makes from {{ drilldown.year }}
@@ -22,13 +22,12 @@
             </div>
         </div>
 
-        <div v-if="drilldown.make" class="px-3 py-2 border-bottom">
+        <div v-if="drilldown.make" class="mb-3">
             <div v-if="modelsLoading" class="loading-section">
                 <font-awesome-icon icon="fa-solid fa-spinner" spin />
                 Loading car models from {{ drilldown.make }}
             </div>
             <div v-else-if="models">
-                <label for="drilldown-makes" class="form-label">Makes</label>
                 <label for="drilldown-models" class="form-label">Models</label>
                 <div v-if="models">
                     <select id="drilldown-models" v-model="drilldown.model" class="form-control">
@@ -38,7 +37,7 @@
             </div>
         </div>
 
-        <div v-if="drilldown.model" class="px-3 py-2 border-bottom">
+        <div v-if="drilldown.model" class="mb-3">
             <div v-if="trimsLoading" class="loading-section">
                 Loading car trims in {{ drilldown.model }}
             </div>
@@ -93,11 +92,16 @@
                         </div>
                     </div>
                 </div>
-                <button @click.stop.prevent="selectCar" class="btn btn-primary">Select</button>
+                <div class="mt-3">
+                    <button @click.stop.prevent="selectCar" class="btn btn-primary">Select</button>
+                </div>
             </div>
 
         </div>
 
+        <div class="mt-3">
+            <button @click.stop.prevent="cancel" class="btn btn-primary">Cancel</button>
+        </div>
     </div>
 </template>
 <script>
@@ -276,6 +280,9 @@
             },
             selectCar(){
                 this.$emit('carSelected', this.car);
+            },
+            cancel(){
+                this.$emit('cancelled');
             }
         },
         watch: {
