@@ -103,7 +103,7 @@
         position: relative;
         top:-50px;
         margin:0 15px 0 15px;
-        width: calc(100%-30px);
+        width: calc(100% - 30px);
     }
     .car-image>img{
         display: block;
