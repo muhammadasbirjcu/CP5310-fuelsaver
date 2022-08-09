@@ -1,4 +1,9 @@
 <template>
+    <div id="pre-loading" v-show="preloadingVisible">
+        <div style="flex:0 0 50%">
+            <img src="/preloading-logo.jpg" alt="FuelSaverr Logo" />
+        </div>
+    </div>
     <div v-if="isCarSelectorVisible" @click.stop.prevent="hideCarSelector" class="modal-backdrop fade show"></div>
     <div>
 
@@ -126,7 +131,8 @@
                     formatted_address: "Surfers Paradise QLD 4217, Australia",
                     name: "Surfers Paradise"
                 },
-                defaultDistance: 250
+                defaultDistance: 250,
+                preloadingVisible: true
             };
         },
         mounted(){
@@ -141,6 +147,10 @@
             this.loadLocations();
             this.preloadDistanceData();
             this.loadSavedCars();
+
+            setTimeout(() => {
+                this.preloadingVisible = false;
+            }, 1000);
         },
         methods: {
             openCarSelector(panelInfo){
@@ -251,6 +261,25 @@
 }
 </script>
 <style>
+#pre-loading{
+    position: fixed;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+    background: #0f1114;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+    #pre-loading>div{
+        flex: 0 0 50%;
+    }
+    #pre-loading img{
+        width: 100%;
+        display: block;
+    }
 html,body{
     position: relative;
     width: 100%;
