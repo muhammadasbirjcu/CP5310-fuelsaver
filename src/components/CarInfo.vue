@@ -9,7 +9,7 @@
             <div class="car-info">
                 <div class="car-make">
                     <!-- <div class="car-logo"><img :src="logoSource(car.make)" /></div> -->
-                    {{ car.make }}
+                    {{ car.year }} {{ car.make }}
                 </div>
                 <div class="car-model">
                     {{ car.model }}
@@ -20,7 +20,9 @@
                 <div class="car-efficiency">
                     {{ mpgTokpl(car.comb08U) }} km/litres
                 </div>
-                <div class="car-trip-cost">
+                <div v-if="infoOnly">
+                </div>
+                <div class="car-trip-cost" v-else>
                     {{ formatAsCurrency(tripCost) }}
                     <div class="car-trip-consumption">
                         {{ roundOff(tripConsumption) }} litres
@@ -29,8 +31,9 @@
             </div>
             <div class="car-card-actions">
                 <div class="btn-group" role="group" aria-label="Basic example">
-                    <button type="button" class="btn btn-primary btn-block" @click.stop.prevent="changeCar">Change</button>
-                    <button type="button" class="btn btn-primary btn-block" @click.stop.prevent="removeCar">Remove</button>
+                    <button v-if="'select' in controls" type="button" class="btn btn-primary btn-block" @click.stop.prevent="selectCar">Select</button>
+                    <button v-if="'change' in controls" type="button" class="btn btn-primary btn-block" @click.stop.prevent="changeCar">Change</button>
+                    <button v-if="'remove' in controls" type="button" class="btn btn-primary btn-block" @click.stop.prevent="removeCar">Remove</button>
                 </div>
             </div>
         </div>
@@ -49,7 +52,18 @@
             car: null,
             panelId: null,
             fuelPrice: null,
-            distance: null
+            distance: null,
+            controls: {
+                default(){
+                    return {
+                        change: true,
+                        remove: true
+                    }
+                }
+            },
+            infoOnly: {
+                default: false
+            }
         },
         mixins: [
             fuelEconomyApi,
@@ -73,6 +87,9 @@
             },
             removeCar(){
                 this.$emit('removeCar', {panelId: this.panelId});
+            },
+            selectCar(){
+                this.$emit('selectCar', {car: this.car});
             },
             formatAsCurrency(value){
                 return this.currencyFormatter ? this.currencyFormatter.format(value) : value;
@@ -98,6 +115,7 @@
         text-align: left;
         font-weight: 500;
         height: 100%;
+        padding-bottom: 40px;
     }
     .car-image{
         position: relative;
@@ -131,8 +149,10 @@
     .car-model{
         font-size: 28px;
         line-height: 1em;
-        height: 56px;
         margin-bottom: 10px;
+          white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
     }
     .car-make{
         font-size:18px;

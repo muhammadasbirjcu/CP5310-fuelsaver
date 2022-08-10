@@ -1,8 +1,8 @@
 <template>
     <div >
-        <div class="mb-3">
+        <div class="mb-3 car-selector-drilldown">
             <label for="drilldown-year" class="form-label">Year</label>
-            <select id="drilldown-year" v-model="drilldown.year" class="form-control">
+            <select id="drilldown-year" v-model="drilldown.year" class="form-control dropdown">
                 <option v-for="yearItem in years" :key="yearItem" :value="yearItem">{{ yearItem }}</option>
             </select>
         </div>
@@ -12,9 +12,9 @@
                 <font-awesome-icon icon="fa-solid fa-spinner" spin />
                 Loading car makes from {{ drilldown.year }}
             </div>
-            <div v-else-if="makes">
+            <div v-else-if="makes" class="car-selector-drilldown">
                 <label for="drilldown-makes" class="form-label">Makes</label>
-                <div>
+                <div class="dropdown">
                     <select id="drilldown-makes" v-model="drilldown.make" class="form-control">
                         <option v-for="makeItem in makes" :key="makeItem.value" :value="makeItem.value">{{ makeItem.text }}</option>
                     </select>
@@ -27,9 +27,9 @@
                 <font-awesome-icon icon="fa-solid fa-spinner" spin />
                 Loading car models from {{ drilldown.make }}
             </div>
-            <div v-else-if="models">
+            <div v-else-if="models" class="car-selector-drilldown">
                 <label for="drilldown-models" class="form-label">Models</label>
-                <div v-if="models">
+                <div v-if="models" class="dropdown">
                     <select id="drilldown-models" v-model="drilldown.model" class="form-control">
                         <option v-for="makeItem in models" :key="makeItem.value" :value="makeItem.value">{{ makeItem.text }}</option>
                     </select>
@@ -41,10 +41,9 @@
             <div v-if="trimsLoading" class="loading-section">
                 Loading car trims in {{ drilldown.model }}
             </div>
-            <div v-else-if="trims && trims.length > 1">
-                <label for="drilldown-makes" class="form-label">Makes</label>
+            <div v-else-if="trims && trims.length > 1" class="car-selector-drilldown">
                 <label for="drilldown-models" class="form-label">Trims</label>
-                <div v-if="trims">
+                <div v-if="trims" class="dropdown">
                     <select id="drilldown-models" v-model="drilldown.carId" class="form-control">
                         <option v-for="trimItem in trims" :key="trimItem.value" :value="trimItem.value">{{ trimItem.text }}</option>
                     </select>
@@ -55,59 +54,33 @@
                 <font-awesome-icon icon="fa-solid fa-spinner" spin />
                 Loading  {{ drilldown.model }} information
             </div>
-            <div v-else-if="car" class="mt-3 text-center"> 
-                <div class="mb-3 h3">
-                    {{ car.make }}
-                    {{ car.model }}
-                </div>
-                <div class="border">
-                    <div class="h5 border-bottom py-2">
-                        <font-awesome-icon icon="fa-solid fa-gas-pump" />
-                        Efficiency
-                    </div>
-                    <div>
-                        <div class="mb-3">
-                            <font-awesome-icon icon="fa-solid fa-road-bridge" />
-                            Combined: 
-                            <div>
-                                {{ car.comb08U }}mpg
-                                or {{ mpgTokpl(car.comb08U) }}km/l
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <font-awesome-icon icon="fa-solid fa-city" />
-                            City: 
-                            <div>
-                                {{ car.city08U }}mpg
-                                or {{ mpgTokpl(car.city08U) }}km/l
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <font-awesome-icon icon="fa-solid fa-road" />
-                            Highway: 
-                            <div>
-                                {{ car.highway08U }}mpg
-                                or {{ mpgTokpl(car.city08U) }}km/l
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mt-3">
-                    <button @click.stop.prevent="selectCar" class="btn btn-primary">Select</button>
-                </div>
-            </div>
-
         </div>
 
         <div class="mt-3">
             <button @click.stop.prevent="cancel" class="btn btn-primary">Cancel</button>
+        </div>
+        <div style="position:relative">
+            <div v-if="!carLoading && car" style="position:absolute; left:0; right:0; top: 85px"> 
+                <div class="car-card fluid">
+                    <CarInfo 
+                        :car="car" 
+                        :panel-id="-1"
+                        :controls="{select:true}"
+                        :info-only="true"
+                        @selectCar="selectCar" />
+                </div>
+            </div>
         </div>
     </div>
 </template>
 <script>
     import fuelEconomyApi from '../mixins/FuelEconomyApi.js';
     import unitConverter from '../mixins/UnitConverter.js';
+    import CarInfo from './CarInfo.vue';
     export default {
+        components: { 
+            CarInfo
+        },
         props: {
         },
         data(){
@@ -314,5 +287,17 @@
 <style>
 .loading-section{
     text-align: center;
+}
+.car-selector-drilldown{
+    display: flex;
+    align-items: center;
+}
+.car-selector-drilldown .form-label{
+    flex:0 0 80px;
+    text-align: left;
+    margin-bottom: 0;
+}
+.car-selector-drilldown .dropdown{
+    flex:1 1 100px;
 }
 </style>

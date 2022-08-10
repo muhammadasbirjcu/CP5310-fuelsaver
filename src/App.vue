@@ -350,12 +350,17 @@ html,body{
     flex:0 0 260px;
     width:260px;
     border-radius: 10px;
-    height: 300px;
+    height: 265px;
     margin:0 25px 0 0;
     color:#fff;
     -webkit-box-shadow: 5px 5px 9px 5px rgba(0,0,0,0.2); 
     box-shadow: 5px 5px 9px 5px rgba(0,0,0,0.2);
 }
+    .car-card.fluid{
+        height: auto;
+        margin-left:auto;
+        margin-right:auto;
+    }
     .car-card.inactive{
         background: #062eee;
         flex:0 0 255px;
@@ -409,7 +414,6 @@ html,body{
     background:rgba(0,0,0,0.8)
 }
 .modal-content{
-    overflow: hidden;
 }
 @media only screen and (min-width: 450px) {
     .factors-info{
