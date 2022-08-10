@@ -405,6 +405,12 @@ html,body{
     align-items: center;
     text-align: center;
 }
+.modal{
+    background:rgba(0,0,0,0.8)
+}
+.modal-content{
+    overflow: hidden;
+}
 @media only screen and (min-width: 450px) {
     .factors-info{
         width:400px;
