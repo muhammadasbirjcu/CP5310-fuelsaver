@@ -13,11 +13,20 @@
                     <font-awesome-icon icon="fa-solid fa-pencil" />
                 </button>
             </div>
-            <input v-else class="form-control"
-                :id="inputId" 
-                :class="{'suggestions-active' : suggestionsVisible}" 
-                @keyup="searchKeyUp" 
-                v-model="searchQuery" type="text">
+            <div v-else class="d-flex">
+                <input class="form-control"
+                    :id="inputId" 
+                    :class="{'suggestions-active' : suggestionsVisible}" 
+                    @keyup="searchKeyUp" 
+                    v-model="searchQuery" type="text">
+                <button 
+                    @click.stop.prevent="initDevicePosition" 
+                    class="current-location-btn"
+                    v-if="allowDeviceLocation" style="flex:0 0 60px">
+                    <font-awesome-icon v-if="ownLocationBusy" icon="fa-solid fa-spinner" spin />
+                    <font-awesome-icon v-else icon="fa-solid fa-location-crosshairs" />
+                </button>
+            </div>
         </div>
         <div class="loc-suggestions-wrapper">
             <div v-if="suggestionsVisible" class="loc-suggestions">
@@ -37,17 +46,21 @@
 </template>
 
 <script>
+    import DeviceGPS from '../mixins/DeviceGPS';
     import Maps from '../mixins/Maps';
     export default {
         mixins: [
+            DeviceGPS,
             Maps
         ],
         props: {
             inputId: null,
             label: null,
-            map: null,
             suggestions: null,
             controlsEnabled: {
+                default: false
+            },
+            allowDeviceLocation: {
                 default: false
             }
         },
@@ -56,7 +69,8 @@
                 searchQuery: null,
                 selectedAddress: null,
                 keyUpTimeout: null,
-                isEditing: false
+                isEditing: false,
+                ownLocationBusy: false
             };
         },
         methods:{
@@ -77,6 +91,31 @@
                     this.$emit('searching', this.searchQuery);
                 }, 1000);
             },
+            initDevicePosition(){
+                // existing request is already on-going
+                if(this.ownLocationBusy){
+                    return;
+                }
+                this.ownLocationBusy = true;
+                this.getDevicePosition().then((position) => {
+                    this.reverseGeolocation(position).then((response) => {
+                        if(response.length > 0){
+                            this.selectAddress({
+                                name: "You Current Location",
+                                formatted_address: response[0].formatted_address,
+                                place_id: response[0].place_id
+                            });
+                        }
+                        this.ownLocationBusy = false;
+                    }).catch((error) => {
+                        this.ownLocationBusy = false;
+                    });
+                }).catch((error) => {
+                    this.ownLocationBusy = false;
+                    console.log(error);
+                    alert("Unable to detect your current location");
+                });
+            }
         },
         computed: {
             suggestionsVisible(){
@@ -124,7 +163,7 @@ box-shadow: 0px 11px 15px -1px rgba(0,0,0,0.35);
 .selected-address{
     flex: 1 1 100px;
 }
-.edit-address-btn{
+.edit-address-btn, .current-location-btn{
     border-radius: 5px;
     flex: 0 0 60px;
     text-align: center;
@@ -136,5 +175,8 @@ box-shadow: 0px 11px 15px -1px rgba(0,0,0,0.35);
     margin: -0.375em -0.75em;
     border:0px none;
 
+}
+.current-location-btn{
+    margin:0;
 }
 </style>

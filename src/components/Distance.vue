@@ -3,13 +3,13 @@
         <div  v-if="!(to && from)" class="bg-warning mb-4" style="margin:-1rem -1rem 0; padding:1rem">
             To get started please type the from and to location.
         </div>
-        <div v-if="loaded">
+        <div v-if="mapLoaded">
             <div class="mb-3">
                 <LocationSearch 
                     :input-id="'from-location'"
                     :suggestions="fromSuggestions"
-                    :map="map" 
                     :controls-enabled="!busy"
+                    :allow-device-location="true"
                     @searching="searchFrom" 
                     @selected="setFrom"
                     label="From" />
@@ -18,7 +18,6 @@
                 <LocationSearch 
                     :input-id="'to-location'"
                     :suggestions="toSuggestions"
-                    :map="map" 
                     :controls-enabled="!busy"
                     @searching="searchTo" 
                     @selected="setTo"
@@ -40,7 +39,7 @@
             </div>
         </div>
         <div v-else class="text-center">
-            <div>
+            <div class="mb-3">
                 Loading GoogleMaps plug-in
             </div>
             <div>
@@ -67,32 +66,14 @@
                 fromSuggestions: [],
                 toSuggestions: [],
                 distance: null,
-                busy: false,
-                map: null,
-                mapId: null
+                busy: false
             }
         },
         mounted(){
-            this.mapId = window.mapId;
-            this.onMapsLoaded = () => { 
-                this.map = new google.maps.Map(document.getElementById('map'), {
-                    center: {
-                        lat: -27.382073,
-                        lng: 152.8531152
-                    },
-                    zoom: 11,
-                    disableDefaultUI: true,
-                    mapId: this.mapId
-                });
-            };
             this.loadMapScript();
         },
         methods: {
             calculate(){
-                // google maps api is not yet loaded
-                if(!this.loaded){
-                    return;
-                }
 
                 this.busy = true;
                 this.calculateDistance({placeId: this.from.place_id}, {placeId: this.to.place_id}).then((distances, status) => {
@@ -121,7 +102,7 @@
                 }else{
                     this.toSuggestions.splice(0);
                 }
-                this.searchPlace(this.map, query).then((suggestions) => {
+                this.searchPlace(query).then((suggestions) => {
                     console.log(suggestions);
                     if(type == 'from'){
                         this.fromSuggestions = suggestions;

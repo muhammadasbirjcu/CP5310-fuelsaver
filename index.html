@@ -9,7 +9,21 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 
         <script src="/config.js"></script>
-        <script>function initMap(){}</script>
+        <script>
+            window.map = null;
+            window.mapLoaded = false;
+            function initMap(){
+                window.map = new google.maps.Map(document.getElementById('map'), {
+                    center: {
+                        lat: -27.382073,
+                        lng: 152.8531152
+                    },
+                    zoom: 11,
+                    disableDefaultUI: true,
+                    mapId: window.mapId
+                });
+            }
+        </script>
         <script type="module" src="/src/main.js"></script>
         <script src="https://kit.fontawesome.com/7b4371f216.js" crossorigin="anonymous"></script>
 
